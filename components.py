@@ -1,14 +1,15 @@
 import time
 import streamlit as st
-from backend import load_parquet
+from data import Dataset
 
 def side_bar():
+    data = Dataset()
     with st.sidebar:
         st.subheader("Refresh data")
         refresh_button = st.button("Refresh")
         progress_bar = st.progress(0)
         if refresh_button:
-            load_parquet()
+            data.load_parquet()
             for i in range(100):
                 time.sleep(0.001)
                 progress_bar.progress(i+1)
