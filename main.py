@@ -22,7 +22,9 @@ def main():
         data.download_parquet()
 
     import os
+    from pathlib import Path
 
+    st.write(Path.cwd)
     st.write(os.listdir())
     st.dataframe(data.get_merge_df())
 
