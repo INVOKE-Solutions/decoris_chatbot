@@ -7,7 +7,7 @@ from components import (
 )
 from model import create_agent, ask_agent
 from data import Dataset
-from css_template import user_template, bot_template, css
+from css_template import css
 from langchain.memory import ConversationBufferMemory
 
 
@@ -19,7 +19,7 @@ def main():
 
     data = Dataset()
     if not data.parquet_exist():
-        data.load_parquet()
+        data.download_parquet()
 
     # initial state
     initial_chat_history_state()
