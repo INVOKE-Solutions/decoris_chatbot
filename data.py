@@ -55,5 +55,6 @@ class Dataset:
         return merge_df
 
     def parquet_exist(self):
-        if self.root_path / "adsets_v17-11-2023.parquet":
+        parq_path = self.root_path / "adsets_v17-11-2023.parquet"
+        if parq_path.exists():
             return True
