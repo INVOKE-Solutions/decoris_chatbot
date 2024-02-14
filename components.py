@@ -11,7 +11,7 @@ def side_bar():
         refresh_button = st.button("Refresh")
         progress_bar = st.progress(0)
         if refresh_button:
-            data.load_parquet()
+            data.download_parquet()
             for i in range(100):
                 time.sleep(0.001)
                 progress_bar.progress(i + 1)
