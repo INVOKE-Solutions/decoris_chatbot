@@ -18,15 +18,13 @@ def main():
     side_bar()
 
     data = Dataset()
-    # if not data.parquet_exist():
-    #     data.download_parquet()
+    if not data.parquet_exist():
+        data.download_parquet()
 
-    data.download_parquet()
-
-    # debug
     import os
 
     st.write(os.listdir())
+    st.dataframe(data.get_merge_df())
 
     # initial state
     initial_chat_history_state()
