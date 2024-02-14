@@ -10,8 +10,6 @@ AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
 class Dataset:
     def __init__(self):
         self.root_path = Path.cwd()
-        # debug
-
         self.merge_df = self.get_merge_df()
 
     def download_parquet(self):
@@ -51,7 +49,10 @@ class Dataset:
 
     @st.cache_data(ttl="1d")
     def get_merge_df(_self):
-        merge_df = _self.merge_df(_self.adset_df, _self.campaign_df)
+        # debug
+        adset_df = _self.read_parquet("../adsets_v17-11-2023.parquet")
+        campaign_df = _self.read_parquet("../campaigns_v17-11-2023.parquet")
+        merge_df = _self.merge_df(adset_df, campaign_df)
         return merge_df
 
     def parquet_exist(self):
