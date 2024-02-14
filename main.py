@@ -31,26 +31,17 @@ def main():
     user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
 
     if user_input:
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
+        st.session_state.chat_history.append(user_input)
         st.chat_message("user").write(user_input)
 
         with st.chat_message("🤖"):
             st_callback = StreamlitCallbackHandler(
                 st.container(), expand_new_thoughts=False
             )
-            # response = ask_agent(agent, user_input, st_callback)
-            response = agent.run(st.session_state.chat_history, callbacks=[st_callback])
-            st.session_state.chat_history.append(
-                {"role": "assistant", "content": response}
-            )
-            st.write(response)
+            response = agent.invoke(user_input, callbacks=[st_callback])
+            st.write(response["output"])
 
         st.session_state.update(st.session_state)
-
-    # agent_response = ask_agent(agent, st.session_state.chat_history)
-    # st.session_state.chat_history.append(agent_response["output"])
-
-    # show_chat_dialogue(st.session_state.chat_history)
 
 
 if __name__ == "__main__":
