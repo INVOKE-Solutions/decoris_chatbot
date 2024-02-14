@@ -24,7 +24,7 @@ def main():
     import os
     from pathlib import Path
 
-    st.write(Path.cwd)
+    st.write(Path.cwd())
     st.write(os.listdir())
     st.dataframe(data.get_merge_df())
 
