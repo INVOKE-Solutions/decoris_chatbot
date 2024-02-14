@@ -10,6 +10,7 @@ AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
 class Dataset:
     def __init__(self):
         self.root_path = Path.cwd()
+        # debug
         # self.adset_df = self.read_parquet("../adsets_v17-11-2023.parquet")
         # self.campaign_df = self.read_parquet("../campaigns_v17-11-2023.parquet")
         self.merge_df = self.get_merge_df()
