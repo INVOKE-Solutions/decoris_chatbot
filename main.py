@@ -8,12 +8,13 @@ from components import (
 from model import create_agent, ask_agent
 from data import Dataset
 from css_template import css
-from langchain.memory import ConversationBufferMemory
+from langchain_community.callbacks import StreamlitCallbackHandler
+from langchain.chains.conversation.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
 
 
 def main():
     st.set_page_config(page_title="Decoris Chatbot", page_icon="🤖")
-    st.session_state.update(st.session_state)
 
     page_title("Decoris Chatbot with LLM")
     side_bar()
@@ -30,11 +31,26 @@ def main():
     user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
 
     if user_input:
-        st.session_state.chat_history.append(user_input)
-        agent_response = ask_agent(agent, st.session_state.chat_history)
-        st.session_state.chat_history.append(agent_response["output"])
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+        st.chat_message("user").write(user_input)
 
-        show_chat_dialogue(st.session_state.chat_history)
+        with st.chat_message("🤖"):
+            st_callback = StreamlitCallbackHandler(
+                st.container(), expand_new_thoughts=False
+            )
+            # response = ask_agent(agent, user_input, st_callback)
+            response = agent.run(st.session_state.chat_history, callbacks=[st_callback])
+            st.session_state.chat_history.append(
+                {"role": "assistant", "content": response}
+            )
+            st.write(response)
+
+        st.session_state.update(st.session_state)
+
+    # agent_response = ask_agent(agent, st.session_state.chat_history)
+    # st.session_state.chat_history.append(agent_response["output"])
+
+    # show_chat_dialogue(st.session_state.chat_history)
 
 
 if __name__ == "__main__":

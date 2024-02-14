@@ -11,7 +11,7 @@ def side_bar():
         refresh_button = st.button("Refresh")
         progress_bar = st.progress(0)
         if refresh_button:
-            data.download_parquet()
+            data.load_parquet()
             for i in range(100):
                 time.sleep(0.001)
                 progress_bar.progress(i + 1)
@@ -25,7 +25,9 @@ def page_title(title: str):
 
 def initial_chat_history_state():
     if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+        st.session_state.chat_history = [
+            {"role": "assistant", "content": "How can I help you?"}
+        ]
 
 
 def show_chat_dialogue(chat_history: list):
