@@ -21,26 +21,19 @@ def main():
     if not data.parquet_exist():
         data.download_parquet()
 
-    import os
-    from pathlib import Path
-
-    st.write(Path.cwd())
-    st.write(os.listdir())
-    st.dataframe(data.get_merge_df())
-
     # initial state
     initial_chat_history_state()
 
-    # agent = create_agent(dataset=data.get_merge_df())
-    # st.write(css, unsafe_allow_html=True)
-    # user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
+    agent = create_agent(dataset=data.get_merge_df())
+    st.write(css, unsafe_allow_html=True)
+    user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
 
-    # if user_input:
-    #     st.session_state.chat_history.append(user_input)
-    #     agent_response = ask_agent(agent, st.session_state.chat_history)
-    #     st.session_state.chat_history.append(agent_response["output"])
+    if user_input:
+        st.session_state.chat_history.append(user_input)
+        agent_response = ask_agent(agent, st.session_state.chat_history)
+        st.session_state.chat_history.append(agent_response["output"])
 
-    #     show_chat_dialogue(st.session_state.chat_history)
+        show_chat_dialogue(st.session_state.chat_history)
 
 
 if __name__ == "__main__":
