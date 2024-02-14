@@ -10,7 +10,7 @@ AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
 class Dataset:
     def __init__(self):
         self.root_path = Path.cwd()
-        self.merge_df = self.get_merge_df()
+        # self.merge_df = self.get_merge_df()
 
     def download_parquet(self):
         bucket_name = st.secrets["BUCKET_NAME"]
