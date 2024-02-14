@@ -13,6 +13,7 @@ from langchain.memory import ConversationBufferMemory
 
 def main():
     st.set_page_config(page_title="Decoris Chatbot", page_icon="🤖")
+    st.session_state.update(st.session_state)
 
     page_title("Decoris Chatbot with LLM")
     side_bar()
