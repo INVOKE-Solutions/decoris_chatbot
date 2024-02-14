@@ -49,8 +49,8 @@ class Dataset:
     @st.cache_data(ttl="1d")
     def get_merge_df(_self):
         # debug
-        adset_df = _self.read_parquet("../adsets_v17-11-2023.parquet")
-        campaign_df = _self.read_parquet("../campaigns_v17-11-2023.parquet")
+        adset_df = _self.read_parquet("adsets_v17-11-2023.parquet")
+        campaign_df = _self.read_parquet("campaigns_v17-11-2023.parquet")
         merge_df = _self.merge_df(adset_df, campaign_df)
         return merge_df
 
