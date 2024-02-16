@@ -16,7 +16,7 @@ from langchain.chains import ConversationChain
 def main():
     st.set_page_config(page_title="Decoris Chatbot", page_icon="🤖")
 
-    page_title("Decoris Chatbot with LLM")
+    page_title("Decoris Chatbot with LLM 🤖")
     side_bar()
 
     data = Dataset()
