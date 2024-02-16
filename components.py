@@ -1,7 +1,6 @@
 import time
 import streamlit as st
 from data import Dataset
-from css_template import user_template, bot_template
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_community.callbacks import StreamlitCallbackHandler
 from model import PandasAgentWithMemory

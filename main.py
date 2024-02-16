@@ -8,7 +8,6 @@ from components import (
     handle_bot_response,
 )
 from data import Dataset
-from css_template import css
 from model import PandasAgentWithMemory
 
 
@@ -28,7 +27,6 @@ def main():
 
     # create agent (model)
     agent = PandasAgentWithMemory(data.get_merge_df())
-    st.write(css, unsafe_allow_html=True)
 
     # user input feature
     user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
