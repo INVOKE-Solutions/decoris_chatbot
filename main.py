@@ -7,12 +7,9 @@ from components import (
     update_chat_history,
     handle_bot_response,
 )
-import time
-from model import create_agent, ask_agent, PandasAgentWithMemory
 from data import Dataset
 from css_template import css
-from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
+from model import PandasAgentWithMemory
 
 
 def main():
