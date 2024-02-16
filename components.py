@@ -30,13 +30,22 @@ def page_title(title: str):
     st.title(title)
 
 
-def initial_chat_history_state():
+def initialize_chat_history_state():
     """
-    Session sate: Chat history
+    Session state: Chat history
     - If not instantiate, create a list as chat history
     """
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+
+
+def initialize_login_state():
+    """
+    Session state: Login
+    - Initialize login session state
+    """
+    if "login" not in st.session_state:
+        st.session_state.login = None
 
 
 def update_chat_history(user_input: str, bot_response: str):
