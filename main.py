@@ -14,7 +14,7 @@ from model import PandasAgentWithMemory
 def main():
     st.set_page_config(page_title="Decoris Chatbot", page_icon="🤖")
 
-    page_title("Decoris Chatbot with LLM 🤖")
+    page_title("Decoris Chatbot 🤖")
     side_bar()
 
     # download data
