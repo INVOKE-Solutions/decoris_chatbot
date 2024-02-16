@@ -70,7 +70,9 @@ def handle_bot_response(
     - response: str - response from agent
     """
     st_callback = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
-    response = agent.answer_me(user_input, chat_history=chat_history, cb=[st_callback])
+    response = agent.answer_me(
+        user_input, chat_history=chat_history, callback_use=[st_callback]
+    )
     return response
 
 
