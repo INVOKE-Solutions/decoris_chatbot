@@ -13,6 +13,13 @@ chat_model = ChatOpenAI(temperature=0, model="gpt-3.5-turbo", api_key=OPENAI_API
 
 
 class PandasAgentWithMemory:
+    """
+    Class to create Pandas agent with conversation memory.
+
+    Method
+    - `answer_me()` - pass query, chat_history, callback_use (Optional) for agent to answer prompt.
+    """
+
     def __init__(self, df):
         self.df = df
         self.prompt = _get_functions_single_prompt(df)
