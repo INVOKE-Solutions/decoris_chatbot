@@ -2,6 +2,7 @@ import time
 import streamlit as st
 from data import Dataset
 from css_template import user_template, bot_template
+from langchain_core.messages import AIMessage, HumanMessage
 
 
 def side_bar():
@@ -25,9 +26,16 @@ def page_title(title: str):
 
 def initial_chat_history_state():
     if "chat_history" not in st.session_state:
-        st.session_state.chat_history = [
-            {"role": "assistant", "content": "How can I help you?"}
+        st.session_state.chat_history = []
+
+
+def update_chat_history(user_input, bot_response):
+    st.session_state.chat_history.extend(
+        [
+            HumanMessage(content=user_input),
+            AIMessage(content=bot_response),
         ]
+    )
 
 
 def show_chat_dialogue(chat_history: list):

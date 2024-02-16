@@ -4,8 +4,9 @@ from components import (
     page_title,
     initial_chat_history_state,
     show_chat_dialogue,
+    update_chat_history,
 )
-from model import create_agent, ask_agent
+from model import create_agent, ask_agent, PandasAgentWithMemory
 from data import Dataset
 from css_template import css
 from langchain_community.callbacks import StreamlitCallbackHandler
@@ -26,22 +27,22 @@ def main():
     # initial state
     initial_chat_history_state()
 
-    agent = create_agent(dataset=data.get_merge_df())
+    agent = PandasAgentWithMemory(data.get_merge_df())
     st.write(css, unsafe_allow_html=True)
     user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
 
     if user_input:
-        st.session_state.chat_history.append(user_input)
         st.chat_message("user").write(user_input)
 
         with st.chat_message("🤖"):
             st_callback = StreamlitCallbackHandler(
                 st.container(), expand_new_thoughts=False
             )
-            response = agent.invoke(user_input, callbacks=[st_callback])
-            st.write(response["output"])
-
-        st.session_state.update(st.session_state)
+            response = agent.answer_me(
+                user_input, chat_history=st.session_state.chat_history, cb=[st_callback]
+            )
+            update_chat_history(user_input, response)
+            st.write(response)
 
 
 if __name__ == "__main__":
