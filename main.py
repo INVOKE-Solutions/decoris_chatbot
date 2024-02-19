@@ -16,6 +16,7 @@ from st_pages import show_pages, Page
 show_pages(
     [
         Page("pages/login.py", "Login", "🔐"),
+        Page("pages/feedback.py", "Feedback", "📩"),
         Page("main.py", "Chatbot", "🤖"),
     ]
 )
