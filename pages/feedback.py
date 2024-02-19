@@ -1,16 +1,13 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
-
+from components import initialize_login_state
 from datetime import datetime
 
 # datetime object containing current date and time
 now = datetime.now()
 date_data = now.strftime("%d/%m/%Y")
 time_data = now.strftime("%H:%M:%S")
-
-st.title("Feedback")
-st.write("Tell us your feedback on the apps!")
 
 
 def connect_gsheet() -> GSheetsConnection:
@@ -62,31 +59,37 @@ def insert_gsheet(
 
 
 def user_feedback():
-    # Establish connection
-    conn = connect_gsheet()
+    initialize_login_state()
+    if not st.session_state.login:
+        st.warning("Please login first")
+    elif st.session_state.login:
+        st.title("Feedback")
+        st.write("Tell us your feedback on the apps!")
+        # Establish connection
+        conn = connect_gsheet()
 
-    with st.form("Submit form"):
+        with st.form("Submit form"):
 
-        # Input user name and user feedback
-        user_name = st.text_input("Name")
-        user_feedback = st.text_area(
-            label="Feedback",
-            value="It can be additional feature, comment, or anything...",
-        )
+            # Input user name and user feedback
+            user_name = st.text_input("Name")
+            user_feedback = st.text_area(
+                label="Feedback",
+                value="It can be additional feature, comment, or anything...",
+            )
 
-        submit_button = st.form_submit_button("Submit")
+            submit_button = st.form_submit_button("Submit")
 
-        # get currect table
-        old_df = read_gsheet(conn)
-        if submit_button:
-            insert_gsheet(conn, user_name, user_feedback, old_df=old_df)
-            st.balloons()
-            st.success("Thank you for your feedback!")
+            # get currect table
+            old_df = read_gsheet(conn)
+            if submit_button:
+                insert_gsheet(conn, user_name, user_feedback, old_df=old_df)
+                st.balloons()
+                st.success("Thank you for your feedback!")
 
-    with st.expander("See feedback"):
-        # clear data in Streamlit to see the current table
-        st.cache_data.clear()
-        st.write(read_gsheet(conn).dropna())
+        with st.expander("See feedback"):
+            # clear data in Streamlit to see the current table
+            st.cache_data.clear()
+            st.write(read_gsheet(conn).dropna())
 
 
 if __name__ == "__main__":
