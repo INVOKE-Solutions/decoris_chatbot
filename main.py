@@ -11,6 +11,7 @@ from components import (
 from data import Dataset
 from model import PandasAgentWithMemory
 from st_pages import show_pages, Page
+from pages.login import LOGIN_PICKLE_PATH
 
 # Rearrange page order
 show_pages(
@@ -24,9 +25,7 @@ show_pages(
 
 def main():
     initialize_login_state()
-    if not st.session_state.login:
-        st.warning("Please login first")
-    elif st.session_state.login:
+    if st.session_state.login or LOGIN_PICKLE_PATH.exists():
         page_title("Decoris Chatbot 🤖")
         side_bar()
 
@@ -50,6 +49,9 @@ def main():
             )
             update_chat_history(user_input, bot_response)
             show_chat_dialogue(st.session_state.chat_history)
+
+    elif not st.session_state.login or not LOGIN_PICKLE_PATH.exists():
+        st.warning("Please login first")
 
 
 if __name__ == "__main__":
