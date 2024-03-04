@@ -25,7 +25,7 @@ show_pages(
 def main():
     initialize_login_state()
     if st.session_state.login:
-        page_title("Decoris Chatbot 🤖")
+        page_title("Decoris Chatbot")
         side_bar()
 
         # download data
