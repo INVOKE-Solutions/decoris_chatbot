@@ -3,7 +3,6 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from components import initialize_login_state
 from datetime import datetime
-from pages.login import read_pickle, get_login_pickle
 
 # datetime object containing current date and time
 now = datetime.now()
@@ -60,11 +59,9 @@ def insert_gsheet(
 
 
 def user_feedback():
-    pickle_dict = read_pickle()
-
     initialize_login_state()
 
-    if st.session_state.login or get_login_pickle(pickle_dict):
+    if st.session_state.login:
         st.title("Feedback")
         st.write("Tell us your feedback on the apps!")
         # Establish connection
@@ -93,7 +90,7 @@ def user_feedback():
             st.cache_data.clear()
             st.write(read_gsheet(conn).dropna())
 
-    elif not st.session_state.login and not get_login_pickle(pickle_dict):
+    elif not st.session_state.login:
         st.warning("Please login first")
 
 

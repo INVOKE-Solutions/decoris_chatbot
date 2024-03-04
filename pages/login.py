@@ -1,32 +1,4 @@
 import streamlit as st
-import pickle
-from pathlib import Path
-import pandas as pd
-
-root_path = Path.cwd()
-LOGIN_PICKLE_PATH = root_path / "login.pkl"
-
-
-def pickle_login(username, password):
-    login_data = {"username": username, "password": password}
-    pickle_out = open("login.pkl", "wb")
-    pickle.dump(login_data, pickle_out)
-    pickle_out.close()
-
-
-def read_pickle() -> dict:
-    return pd.read_pickle(LOGIN_PICKLE_PATH)
-
-
-def get_login_pickle(pickle_: dict):
-    if LOGIN_PICKLE_PATH.exists():
-        if (
-            pickle_["username"] == st.secrets["USERNAME"]
-            and pickle_["password"] == st.secrets["PASSWORD"]
-        ):
-            return True
-    else:
-        return False
 
 
 def login():
@@ -46,7 +18,6 @@ def login():
                 st.session_state.login = True
                 st.session_state.username = username
                 st.session_state.password = password
-                pickle_login(username, password)
                 return True
             else:
                 st.error("Username/password is incorrect")
