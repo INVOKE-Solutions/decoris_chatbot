@@ -6,6 +6,7 @@ def login():
         st.title("Login")
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
+
         submit_button = st.form_submit_button("Submit")
 
         if submit_button:
@@ -15,6 +16,8 @@ def login():
             ):
                 st.success(f"Welcome {username}")
                 st.session_state.login = True
+                st.session_state.username = username
+                st.session_state.password = password
                 return True
             else:
                 st.error("Username/password is incorrect")

@@ -24,9 +24,7 @@ show_pages(
 
 def main():
     initialize_login_state()
-    if not st.session_state.login:
-        st.warning("Please login first")
-    elif st.session_state.login:
+    if st.session_state.login:
         page_title("Decoris Chatbot 🤖")
         side_bar()
 
@@ -50,6 +48,9 @@ def main():
             )
             update_chat_history(user_input, bot_response)
             show_chat_dialogue(st.session_state.chat_history)
+
+    elif not st.session_state.login:
+        st.warning("Please login first")
 
 
 if __name__ == "__main__":
