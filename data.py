@@ -2,6 +2,8 @@ from pathlib import Path
 import streamlit as st
 import boto3
 import pandas as pd
+import numpy as np
+from rename_map import client_industry_mapping, fb_page_category_mapping
 
 AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
@@ -73,6 +75,57 @@ class Dataset:
         adset_df = _self.read_parquet(_self.root_path / _self.adset_parquet)
         campaign_df = _self.read_parquet(_self.root_path / _self.campaign_parquet)
         merge_df = _self.merge_df(adset_df, campaign_df)
+        return merge_df
+
+    def handle_empty_nan(self, merge_df) -> pd.DataFrame:
+        """
+        Handling empty, NAN
+        - "Gender" - replace blank with "All"
+        - Others
+            - Replace `null` with `np.NAN`
+            - Replace blank with `np.NAN`
+        """
+        merge_df["Gender"] = (
+            merge_df[["Gender"]].fillna("All").replace(r"^\s*$", "All", regex=True)
+        )
+        merge_df["Custom Audiences"] = (
+            merge_df[["Custom Audiences"]]
+            .fillna(np.NAN)
+            .replace(r"^\s*$", np.NAN, regex=True)
+        )
+        merge_df["Country"] = (
+            merge_df[["Country"]].fillna(np.NAN).replace(r"^\s*$", np.NAN, regex=True)
+        )
+        merge_df["Company Name"] = merge_df["Company Name"].fillna(np.NAN)
+        merge_df["Client Industry"] = (
+            merge_df["Client Industry"]
+            .fillna(np.NAN)
+            .replace(r"^\s*$", np.NAN, regex=True)
+        )
+        merge_df["Psychographic"] = (
+            merge_df["Psychographic"]
+            .fillna(np.NAN)
+            .replace(r"^\s*$", np.NAN, regex=True)
+        )
+        merge_df["Facebook Page Name"] = (
+            merge_df["Facebook Page Name"]
+            .fillna(np.NAN)
+            .replace(r"^\s*$", np.NAN, regex=True)
+        )
+        return merge_df
+
+    def rename_client_industry(self, merge_df):
+        """
+        Return dataframe with rename value
+        """
+        merge_df = merge_df.replace(client_industry_mapping)
+        return merge_df
+
+    def rename_fb_page_category(self, merge_df):
+        """
+        Return dataframe with rename value
+        """
+        merge_df = merge_df.replace(fb_page_category_mapping)
         return merge_df
 
     def parquet_exist(self) -> bool:
