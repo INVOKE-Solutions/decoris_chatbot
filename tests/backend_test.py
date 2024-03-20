@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from data import Dataset
+from data import Dataset, DataFrameCleaning
 from pathlib import Path
 from model import PandasAgent
 from rename_map import fb_page_category_mapping, client_industry_mapping
@@ -48,8 +48,15 @@ def get_merge_df(get_dataset):
     return merge_df
 
 
-def test_handling_empty_nan(get_dataset, get_merge_df: pd.DataFrame):
-    df_no_null = get_dataset.handle_empty_nan(get_merge_df)
+@pytest.fixture
+def clean_df_fixture(get_dataset):
+    merge_df = get_dataset.get_merge_df()
+    clean_dataframe = DataFrameCleaning(merge_df)
+    return clean_dataframe
+
+
+def test_handling_empty_nan(clean_df_fixture, get_merge_df: pd.DataFrame):
+    df_no_null = clean_df_fixture.handle_empty_nan(get_merge_df)
 
     def check_no_null(col_name: str) -> bool:
         if (
@@ -78,16 +85,16 @@ def test_handling_empty_nan(get_dataset, get_merge_df: pd.DataFrame):
     assert check_no_null("Country") == True, "There is blank value in Country column"
 
 
-def test_client_industry_rename(get_dataset, get_merge_df):
-    renamed_df = get_dataset.rename_client_industry(get_merge_df)
+def test_client_industry_rename(clean_df_fixture, get_merge_df):
+    renamed_df = clean_df_fixture.rename_client_industry(get_merge_df)
     assert (
         list(client_industry_mapping.values())[0]
         in renamed_df["Client Industry"].unique()
     ), f"{list(client_industry_mapping.values())[0]} not exist in Client Industry unique value"
 
 
-def test_facebook_page_category_rename(get_dataset, get_merge_df):
-    rename_df = get_dataset.rename_fb_page_category(get_merge_df)
+def test_facebook_page_category_rename(clean_df_fixture, get_merge_df):
+    rename_df = clean_df_fixture.rename_fb_page_category(get_merge_df)
     assert (
         list(fb_page_category_mapping.values())[0]
         in rename_df["Facebook Page Category"].unique()
@@ -104,8 +111,12 @@ load_dotenv()
 
 
 def test_invoke_model(get_dataset):
+    get_dataframe = get_dataset.get_merge_df()
+    df_cleaning = DataFrameCleaning(get_dataframe)
+    clean_dataframe = df_cleaning.clean_df()
+
     agent = PandasAgent(
-        get_dataset.get_merge_df(),
+        clean_dataframe,
         OPENAI_API_KEY=OPENAI_API_KEY,
         prefix="custom",
         custom_prefix=custom_prefix,
