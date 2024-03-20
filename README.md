@@ -47,5 +47,9 @@ $ uvicorn main:app --reload
 # Testing
 ## Run all tests
 ```
+# linux
 $ python -m pytest tests
+
+# windows
+$ python -m pytest /tests
 ```
