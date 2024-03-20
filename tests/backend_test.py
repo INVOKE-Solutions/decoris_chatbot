@@ -1,10 +1,8 @@
-import streamlit as st
-from langchain_openai import ChatOpenAI
-from model import PandasAgentWithMemory
-from data import Dataset
 import pytest
-from pathlib import Path
 import pandas as pd
+from data import Dataset
+from pathlib import Path
+from model import PandasAgent
 from rename_map import fb_page_category_mapping, client_industry_mapping
 
 
@@ -99,14 +97,19 @@ def test_facebook_page_category_rename(get_dataset, get_merge_df):
 # --------------------------- Model ------------------------------------------
 from dotenv import load_dotenv
 import os
+from model_prefix import custom_prefix
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 load_dotenv()
 
 
 def test_invoke_model(get_dataset):
-    agent = PandasAgentWithMemory(
-        get_dataset.get_merge_df(), OPENAI_API_KEY=OPENAI_API_KEY
+    agent = PandasAgent(
+        get_dataset.get_merge_df(),
+        OPENAI_API_KEY=OPENAI_API_KEY,
+        prefix="custom",
+        custom_prefix=custom_prefix,
+        verbosity=False,
     )
     user_input = "Who are you?"
     response = agent.answer_me(user_input, agent.chat_history, None)
