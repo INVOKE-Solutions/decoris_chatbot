@@ -21,6 +21,8 @@ show_pages(
     ]
 )
 
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+
 
 def main():
     initialize_login_state()
@@ -37,7 +39,9 @@ def main():
         initialize_chat_history_state()
 
         # create agent (model)
-        agent = PandasAgentWithMemory(data.get_merge_df())
+        agent = PandasAgentWithMemory(
+            df=data.get_merge_df(), OPENAI_API_KEY=OPENAI_API_KEY
+        )
 
         # user input feature
         user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")

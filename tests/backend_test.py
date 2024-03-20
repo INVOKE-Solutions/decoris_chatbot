@@ -97,12 +97,17 @@ def test_facebook_page_category_rename(get_dataset, get_merge_df):
 
 
 # --------------------------- Model ------------------------------------------
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-chat_model = ChatOpenAI(temperature=0, model="gpt-3.5-turbo", api_key=OPENAI_API_KEY)
+from dotenv import load_dotenv
+import os
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+load_dotenv()
 
 
 def test_invoke_model(get_dataset):
-    agent = PandasAgentWithMemory(get_dataset.get_merge_df())
+    agent = PandasAgentWithMemory(
+        get_dataset.get_merge_df(), OPENAI_API_KEY=OPENAI_API_KEY
+    )
     user_input = "Who are you?"
     response = agent.answer_me(user_input, agent.chat_history, None)
     assert isinstance(response, str), "Response is not string"

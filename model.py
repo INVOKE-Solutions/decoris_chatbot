@@ -8,10 +8,6 @@ from langchain_experimental.agents.agent_toolkits.pandas.base import (
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 
 
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-chat_model = ChatOpenAI(temperature=0, model="gpt-3.5-turbo", api_key=OPENAI_API_KEY)
-
-
 class PandasAgentWithMemory:
     """
     Class to create Pandas agent with conversation memory.
@@ -20,7 +16,12 @@ class PandasAgentWithMemory:
     - `answer_me()` - pass query, chat_history, callback_use (Optional) for agent to answer prompt.
     """
 
-    def __init__(self, df):
+    def __init__(self, df, OPENAI_API_KEY):
+        self.openai_api_key = OPENAI_API_KEY
+        self.chat_model = ChatOpenAI(
+            temperature=0, model="gpt-3.5-turbo", api_key=self.openai_api_key
+        )
+
         self.df = df
         self.prompt = _get_functions_single_prompt(df)
         self.prompt.input_variables.append("chat_history")
@@ -31,7 +32,7 @@ class PandasAgentWithMemory:
         self.tools = [PythonAstREPLTool(locals={"df": df})]
 
         self.agent_m = create_openai_functions_agent(
-            chat_model, self.tools, self.prompt
+            self.chat_model, self.tools, self.prompt
         )
         self.agent_exe = AgentExecutor(
             agent=self.agent_m, tools=self.tools, verbose=True
