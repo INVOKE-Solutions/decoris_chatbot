@@ -77,7 +77,9 @@ class PandasAgent:
         else:
             self.chat_history = None
 
-    def answer_me(self, query, chat_history: list, callback_use=None) -> str:
+    def answer_me(
+        self, query: str, chat_history: Union[list[object], None], callback_use=None
+    ) -> str:
         """
         Return response from the agent by accpet prompt from user.
         Accept callbacks from Streamlit functionality.
