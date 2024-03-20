@@ -9,30 +9,30 @@
 
 1. `Streamlit` - Create `/.streamlit/secrets.toml` file on your local machine and provide the following key and value
 ```toml
-AWS_ACCESS_KEY_ID=xxx
-AWS_SECRET_ACCESS_KEY=xxx
-OPENAI_API_KEY=xxx
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+OPENAI_API_KEY=""
 
-BUCKET_NAME=xxx
-OBJECT_NAME_1=xx
-OBJECT_NAME_2=xxx
+BUCKET_NAME=""
+OBJECT_NAME_1=""
+OBJECT_NAME_2=""
 
-USERNAME=xxx
-PASSWORD=xxx
+USERNAME=""
+PASSWORD=""
 
 [connections.gsheets]
-spreadsheet = xxx
+spreadsheet = ""
 ```
 2. API Development - Create `.env` file on your local machine and provide
 the following key and value
-```
-AWS_ACCESS_KEY_ID=xxx
-AWS_SECRET_ACCESS_KEY=xxx
-OPENAI_API_KEY=xxx
+```toml
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+OPENAI_API_KEY=""
 
-BUCKET_NAME=xxx
-OBJECT_NAME_1=xxx
-OBJECT_NAME_2=xxx
+BUCKET_NAME=""
+OBJECT_NAME_1=""
+OBJECT_NAME_2=""
 ```
 
 ## Run Streamlit Locally
