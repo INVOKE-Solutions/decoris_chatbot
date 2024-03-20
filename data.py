@@ -1,11 +1,11 @@
-from pathlib import Path
-import streamlit as st
-import boto3
-import pandas as pd
-import numpy as np
-from rename_map import client_industry_mapping, fb_page_category_mapping
-from dotenv import load_dotenv
 import os
+import boto3
+import numpy as np
+import pandas as pd
+import streamlit as st
+from pathlib import Path
+from dotenv import load_dotenv
+from rename_map import client_industry_mapping, fb_page_category_mapping
 
 load_dotenv()
 
@@ -81,57 +81,6 @@ class Dataset:
         merge_df = _self.merge_df(adset_df, campaign_df)
         return merge_df
 
-    def handle_empty_nan(self, merge_df) -> pd.DataFrame:
-        """
-        Handling empty, NAN
-        - "Gender" - replace blank with "All"
-        - Others
-            - Replace `null` with `np.NAN`
-            - Replace blank with `np.NAN`
-        """
-        merge_df["Gender"] = (
-            merge_df[["Gender"]].fillna("All").replace(r"^\s*$", "All", regex=True)
-        )
-        merge_df["Custom Audiences"] = (
-            merge_df[["Custom Audiences"]]
-            .fillna(np.NAN)
-            .replace(r"^\s*$", np.NAN, regex=True)
-        )
-        merge_df["Country"] = (
-            merge_df[["Country"]].fillna(np.NAN).replace(r"^\s*$", np.NAN, regex=True)
-        )
-        merge_df["Company Name"] = merge_df["Company Name"].fillna(np.NAN)
-        merge_df["Client Industry"] = (
-            merge_df["Client Industry"]
-            .fillna(np.NAN)
-            .replace(r"^\s*$", np.NAN, regex=True)
-        )
-        merge_df["Psychographic"] = (
-            merge_df["Psychographic"]
-            .fillna(np.NAN)
-            .replace(r"^\s*$", np.NAN, regex=True)
-        )
-        merge_df["Facebook Page Name"] = (
-            merge_df["Facebook Page Name"]
-            .fillna(np.NAN)
-            .replace(r"^\s*$", np.NAN, regex=True)
-        )
-        return merge_df
-
-    def rename_client_industry(self, merge_df):
-        """
-        Return dataframe with rename value
-        """
-        merge_df = merge_df.replace(client_industry_mapping)
-        return merge_df
-
-    def rename_fb_page_category(self, merge_df):
-        """
-        Return dataframe with rename value
-        """
-        merge_df = merge_df.replace(fb_page_category_mapping)
-        return merge_df
-
     def parquet_exist(self) -> bool:
         """
         Return True if adset_parquet exist.
@@ -139,3 +88,78 @@ class Dataset:
         parq_path = self.root_path / self.adset_parquet
         if parq_path.exists():
             return True
+
+
+class DataFrameCleaning:
+    """
+    Clean dataframe by
+        - Handling nan and empty value
+        - Rename Client Industry column
+        - Rename Facebook Page Category column
+
+    """
+
+    def __init__(self, merge_df):
+        """
+        Args:
+            - merge_df  - Merged dataframe from `Dataset.get_merge_df()`
+        """
+        self.merge_df = merge_df
+
+    def handle_empty_nan(self, merge_df) -> pd.DataFrame:
+        """
+        Handling empty, NAN
+
+        Details:
+        - "Gender" - replace blank with "All"
+        -  Others:
+                - Replace `null` with `np.NAN`
+                - Replace blank with `np.NAN`
+        """
+
+        def fillna_replace(df, column_name: str, replace_val):
+            df_replace = (
+                df[[column_name]]
+                .fillna(replace_val)
+                .replace(r"^\s*$", replace_val, regex=True)
+            )
+            return df_replace
+
+        merge_df["Gender"] = fillna_replace(merge_df, "Gender", "All")
+        merge_df["Custom Audiences"] = fillna_replace(
+            merge_df, "Custom Audiences", np.NAN
+        )
+        merge_df["Country"] = fillna_replace(merge_df, "Country", np.NAN)
+        merge_df["Company Name"] = merge_df["Company Name"].fillna(np.NAN)
+        merge_df["Client Industry"] = fillna_replace(
+            merge_df, "Client Industry", np.NAN
+        )
+        merge_df["Psychographic"] = fillna_replace(merge_df, "Psychographic", np.NAN)
+        merge_df["Facebook Page Name"] = fillna_replace(
+            merge_df, "Facebook Page Name", np.NAN
+        )
+        return merge_df
+
+    def rename_client_industry(self, merge_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Return dataframe with rename value
+        """
+        merge_df = merge_df.replace(client_industry_mapping)
+        return merge_df
+
+    def rename_fb_page_category(self, merge_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Return dataframe with rename value
+        """
+        merge_df = merge_df.replace(fb_page_category_mapping)
+        return merge_df
+
+    def clean_df(self) -> pd.DataFrame:
+        """
+        Return the final clean dataframe
+        """
+        handle_df = self.handle_empty_nan(self.merge_df)
+        rename_client_df = self.rename_client_industry(handle_df)
+        rename_fb_df = self.rename_fb_page_category(rename_client_df)
+
+        return rename_fb_df
