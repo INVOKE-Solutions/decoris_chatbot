@@ -9,7 +9,7 @@ from components import (
     initialize_chat_history_state,
 )
 from data import Dataset
-from model import PandasAgentWithMemory
+from model import PandasAgent
 from st_pages import show_pages, Page
 
 # Rearrange page order
@@ -39,8 +39,11 @@ def main():
         initialize_chat_history_state()
 
         # create agent (model)
-        agent = PandasAgentWithMemory(
-            df=data.get_merge_df(), OPENAI_API_KEY=OPENAI_API_KEY
+        agent = PandasAgent(
+            df=data.get_merge_df(),
+            prefix=False,
+            memory=True,
+            OPENAI_API_KEY=OPENAI_API_KEY,
         )
 
         # user input feature
