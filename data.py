@@ -4,9 +4,13 @@ import boto3
 import pandas as pd
 import numpy as np
 from rename_map import client_industry_mapping, fb_page_category_mapping
+from dotenv import load_dotenv
+import os
 
-AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
-AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+load_dotenv()
+
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
 
 class Dataset:
@@ -16,9 +20,9 @@ class Dataset:
 
     def __init__(self):
         self.root_path = Path.cwd()
-        self.bucket_name = st.secrets["BUCKET_NAME"]
-        self.campaign_parquet = st.secrets["OBJECT_NAME_1"]
-        self.adset_parquet = st.secrets["OBJECT_NAME_2"]
+        self.bucket_name = os.getenv("BUCKET_NAME")
+        self.campaign_parquet = os.getenv("OBJECT_NAME_1")
+        self.adset_parquet = os.getenv("OBJECT_NAME_2")
 
     def download_parquet(self):
         """
