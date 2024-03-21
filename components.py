@@ -3,7 +3,7 @@ import streamlit as st
 from data import Dataset
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_community.callbacks import StreamlitCallbackHandler
-from model import PandasAgentWithMemory
+from model import PandasAgent
 
 
 def side_bar():
@@ -65,9 +65,7 @@ def update_chat_history(user_input: str, bot_response: str):
     )
 
 
-def handle_bot_response(
-    agent: PandasAgentWithMemory, user_input: str, chat_history: list
-) -> str:
+def handle_bot_response(agent: PandasAgent, user_input: str, chat_history: list) -> str:
     """
     Args:
     - agent: PandasAgentWithMemory - Agent to asnwer question
