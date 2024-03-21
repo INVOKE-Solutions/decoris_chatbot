@@ -9,7 +9,7 @@ from components import (
     initialize_chat_history_state,
 )
 from data import Dataset
-from model import PandasAgentWithMemory
+from model import PandasAgent
 from st_pages import show_pages, Page
 
 # Rearrange page order
@@ -20,6 +20,8 @@ show_pages(
         Page("main.py", "Chatbot", "🤖"),
     ]
 )
+
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
 
 def main():
@@ -37,7 +39,12 @@ def main():
         initialize_chat_history_state()
 
         # create agent (model)
-        agent = PandasAgentWithMemory(data.get_merge_df())
+        agent = PandasAgent(
+            df=data.get_merge_df(),
+            prefix=False,
+            memory=True,
+            OPENAI_API_KEY=OPENAI_API_KEY,
+        )
 
         # user input feature
         user_input = st.chat_input("Ask about the Campaign, Adset or Ads!")
